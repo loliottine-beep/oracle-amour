@@ -1,0 +1,750 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Oracle de l'Amour</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,900;1,900&family=Oswald:wght@700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --gold:    #D4AF37;
+  --gold2:   #FFE066;
+  --gold3:   #8B6914;
+  --red:     #CC0000;
+  --red2:    #FF2222;
+  --green:   #00FF88;
+  --green2:  #39FF14;
+  --bg:      #06000F;
+  --bg2:     #110022;
+  --white:   #FFF5E0;
+  --pink:    #FF4D8F;
+}
+
+html { height: 100%; }
+
+body {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  color: var(--white);
+  font-family: 'Oswald', sans-serif;
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  position: relative;
+}
+
+/* ── FOND COSMIQUE ── */
+.cosmos {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 0;
+  overflow: hidden;
+}
+.star {
+  position: absolute;
+  background: #fff;
+  border-radius: 50%;
+  animation: twinkle var(--d, 3s) ease-in-out infinite alternate;
+  opacity: var(--o, 0.6);
+}
+@keyframes twinkle { from { opacity: 0.1; } to { opacity: 1; } }
+
+/* Éclairs */
+.lightning {
+  position: absolute;
+  top: 0;
+  width: 3px;
+  background: linear-gradient(180deg, rgba(180,220,255,0.9) 0%, rgba(180,220,255,0) 100%);
+  animation: flash var(--fd, 4s) ease-in-out infinite;
+  transform-origin: top center;
+}
+@keyframes flash {
+  0%, 85%, 100% { opacity: 0; }
+  87%, 92% { opacity: 0.9; }
+  89% { opacity: 0.3; }
+}
+
+/* ── LAYOUT ── */
+.page {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 2rem 1.5rem 3rem;
+  gap: 0;
+  max-width: 720px;
+  margin: 0 auto;
+}
+
+/* ── CADRE BAROQUE ── */
+.cadre-outer {
+  position: relative;
+  width: 100%;
+  max-width: 560px;
+  margin-bottom: 2rem;
+}
+
+/* ornements coin */
+.orn {
+  position: absolute;
+  font-size: 32px;
+  line-height: 1;
+  color: var(--gold);
+  filter: drop-shadow(0 0 8px rgba(212,175,55,0.8));
+  z-index: 10;
+  animation: glow-orn 2.5s ease-in-out infinite alternate;
+}
+@keyframes glow-orn {
+  from { filter: drop-shadow(0 0 6px rgba(212,175,55,0.6)); }
+  to   { filter: drop-shadow(0 0 18px rgba(255,220,80,1)); }
+}
+.orn.tl { top: -10px; left: -10px; transform: rotate(0deg); }
+.orn.tr { top: -10px; right: -10px; transform: rotate(90deg); }
+.orn.bl { bottom: -10px; left: -10px; transform: rotate(270deg); }
+.orn.br { bottom: -10px; right: -10px; transform: rotate(180deg); }
+
+/* le cadre lui-même */
+.cadre-inner {
+  border: 4px solid var(--gold);
+  border-radius: 4px;
+  padding: 0.2rem;
+  background: transparent;
+  position: relative;
+  box-shadow:
+    0 0 0 2px var(--gold3),
+    0 0 0 6px var(--bg),
+    0 0 0 10px var(--gold3),
+    inset 0 0 0 2px var(--gold3);
+}
+.cadre-inner::before {
+  content: '';
+  position: absolute;
+  inset: 6px;
+  border: 1.5px solid rgba(212,175,55,0.35);
+  pointer-events: none;
+  border-radius: 2px;
+}
+
+.cadre-content {
+  padding: 2rem 1.8rem 2rem;
+  background: radial-gradient(ellipse at center, #1a0035 0%, #06000F 80%);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 1.2rem;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Coeurs flottants dans le cadre */
+.hearts-bg {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  overflow: hidden;
+}
+.hrt {
+  position: absolute;
+  font-size: var(--s, 18px);
+  color: var(--red2);
+  animation: float-heart var(--fd2, 6s) ease-in-out infinite;
+  opacity: 0.25;
+}
+@keyframes float-heart {
+  0%   { transform: translateY(0) rotate(var(--r,0deg)) scale(1); opacity: 0.15; }
+  50%  { transform: translateY(-30px) rotate(calc(var(--r,0deg) + 15deg)) scale(1.1); opacity: 0.35; }
+  100% { transform: translateY(0) rotate(var(--r,0deg)) scale(1); opacity: 0.15; }
+}
+
+/* ── TITRE ── */
+.oracle-eyebrow {
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 5px;
+  color: var(--gold);
+  text-transform: uppercase;
+  opacity: 0.8;
+}
+
+.oracle-title {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-weight: 900;
+  font-size: clamp(30px, 7vw, 52px);
+  color: var(--gold2);
+  line-height: 1;
+  text-align: center;
+  text-shadow:
+    0 0 30px rgba(255,220,80,0.6),
+    2px 2px 0px var(--gold3);
+}
+
+.oracle-crown {
+  font-size: 40px;
+  animation: crown-pulse 2s ease-in-out infinite alternate;
+  filter: drop-shadow(0 0 12px rgba(255,200,0,0.9));
+}
+@keyframes crown-pulse {
+  from { transform: scale(1) rotate(-3deg); filter: drop-shadow(0 0 8px rgba(255,200,0,0.7)); }
+  to   { transform: scale(1.08) rotate(3deg); filter: drop-shadow(0 0 20px rgba(255,220,80,1)); }
+}
+
+.oracle-sub {
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--green);
+  text-transform: uppercase;
+  opacity: 0.85;
+  text-shadow: 0 0 10px rgba(0,255,136,0.6);
+}
+
+/* ── DIVIDER ── */
+.divider {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  color: var(--gold);
+  font-size: 14px;
+  opacity: 0.6;
+}
+.divider::before, .divider::after {
+  content: '';
+  flex: 1;
+  height: 1px;
+  background: linear-gradient(90deg, transparent, var(--gold), transparent);
+}
+
+/* ── INPUT ── */
+.input-label {
+  font-family: 'Oswald', sans-serif;
+  font-size: 12px;
+  letter-spacing: 3px;
+  color: var(--gold);
+  text-transform: uppercase;
+  text-align: center;
+  opacity: 0.9;
+}
+
+.prenom-wrap {
+  width: 100%;
+  position: relative;
+}
+.prenom-wrap::before,
+.prenom-wrap::after {
+  content: '✦';
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--gold);
+  font-size: 16px;
+  pointer-events: none;
+  opacity: 0.7;
+}
+.prenom-wrap::before { left: 14px; }
+.prenom-wrap::after  { right: 14px; }
+
+.prenom-field {
+  width: 100%;
+  height: 56px;
+  border: 2px solid var(--gold);
+  border-radius: 0;
+  background: rgba(0,0,0,0.6);
+  color: var(--white);
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: 20px;
+  letter-spacing: 2px;
+  text-align: center;
+  padding: 0 40px;
+  outline: none;
+  box-shadow: inset 0 0 20px rgba(212,175,55,0.08), 0 0 0 1px var(--gold3);
+  transition: box-shadow 0.3s, border-color 0.3s;
+  -webkit-appearance: none;
+}
+.prenom-field::placeholder { color: rgba(212,175,55,0.4); font-style: italic; }
+.prenom-field:focus {
+  border-color: var(--green);
+  box-shadow: inset 0 0 20px rgba(0,255,136,0.05), 0 0 0 1px var(--green), 0 0 20px rgba(0,255,136,0.2);
+}
+
+/* ── BOUTON ── */
+.oracle-btn {
+  width: 100%;
+  height: 62px;
+  border: 3px solid var(--gold);
+  background: var(--red);
+  color: var(--gold2);
+  font-family: 'Oswald', sans-serif;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  cursor: pointer;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 0 0 1px var(--gold3), 0 4px 30px rgba(204,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1);
+  transition: transform 0.1s, box-shadow 0.2s, background 0.2s;
+  -webkit-tap-highlight-color: transparent;
+  touch-action: manipulation;
+}
+.oracle-btn::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(180deg, rgba(255,255,255,0.1) 0%, transparent 50%);
+  pointer-events: none;
+}
+.oracle-btn::after {
+  content: attr(data-text);
+  position: absolute;
+  inset: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.oracle-btn:hover {
+  background: var(--red2);
+  box-shadow: 0 0 0 1px var(--gold3), 0 4px 40px rgba(255,34,34,0.7), inset 0 1px 0 rgba(255,255,255,0.15);
+}
+.oracle-btn:active {
+  transform: scale(0.97) translateY(1px);
+}
+
+/* ── CARTE RÉSULTAT ── */
+.result-zone {
+  width: 100%;
+  max-width: 560px;
+  position: relative;
+}
+
+.result-badge {
+  position: absolute;
+  top: -14px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: var(--red);
+  border: 2px solid var(--gold);
+  color: var(--gold2);
+  font-family: 'Oswald', sans-serif;
+  font-size: 11px;
+  letter-spacing: 3px;
+  padding: 4px 20px;
+  text-transform: uppercase;
+  white-space: nowrap;
+  z-index: 5;
+  box-shadow: 0 0 12px rgba(204,0,0,0.6);
+}
+
+.result-card {
+  border: 3px solid var(--gold);
+  background: radial-gradient(ellipse at top, #1a0025 0%, #06000F 70%);
+  padding: 2.5rem 2rem 2rem;
+  box-shadow: 0 0 0 1px var(--gold3), inset 0 0 40px rgba(212,175,55,0.04);
+  position: relative;
+  min-height: 200px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+  overflow: hidden;
+  transition: border-color 0.5s;
+}
+
+/* variantes couleur de carte */
+.result-card.cv-red    { border-color: var(--red2); box-shadow: 0 0 0 1px #880000, 0 0 40px rgba(255,34,34,0.15); }
+.result-card.cv-green  { border-color: var(--green); box-shadow: 0 0 0 1px #005533, 0 0 40px rgba(0,255,136,0.12); }
+.result-card.cv-gold   { border-color: var(--gold2); box-shadow: 0 0 0 1px var(--gold3), 0 0 40px rgba(255,220,80,0.15); }
+.result-card.cv-pink   { border-color: var(--pink); box-shadow: 0 0 0 1px #880040, 0 0 40px rgba(255,77,143,0.15); }
+
+.card-corner-orn {
+  position: absolute;
+  font-size: 20px;
+  color: var(--gold);
+  opacity: 0.5;
+  line-height: 1;
+}
+.card-corner-orn.tl { top: 8px; left: 10px; }
+.card-corner-orn.tr { top: 8px; right: 10px; }
+.card-corner-orn.bl { bottom: 8px; left: 10px; }
+.card-corner-orn.br { bottom: 8px; right: 10px; }
+
+.result-emoji {
+  font-size: 54px;
+  line-height: 1;
+  animation: pop-in 0.4s cubic-bezier(.36,1.56,.64,1) both;
+}
+@keyframes pop-in {
+  from { transform: scale(0.2) rotate(-15deg); opacity: 0; }
+  to   { transform: scale(1) rotate(0deg); opacity: 1; }
+}
+
+.result-text {
+  font-family: 'Playfair Display', serif;
+  font-style: italic;
+  font-size: clamp(16px, 3vw, 20px);
+  line-height: 1.65;
+  color: var(--white);
+  animation: slide-up 0.4s ease both;
+  animation-delay: 0.08s;
+}
+@keyframes slide-up {
+  from { transform: translateY(14px); opacity: 0; }
+  to   { transform: translateY(0); opacity: 1; }
+}
+
+.result-placeholder {
+  font-family: 'Oswald', sans-serif;
+  font-size: 14px;
+  letter-spacing: 2px;
+  color: rgba(212,175,55,0.35);
+  text-transform: uppercase;
+}
+
+/* ── HISTORIQUE ── */
+.history-section {
+  width: 100%;
+  max-width: 560px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+.history-label {
+  font-size: 10px;
+  letter-spacing: 3px;
+  color: rgba(212,175,55,0.4);
+  text-transform: uppercase;
+}
+.history-pills {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+.hpill {
+  font-family: 'Oswald', sans-serif;
+  font-size: 13px;
+  letter-spacing: 1.5px;
+  padding: 6px 18px;
+  border: 1.5px solid rgba(212,175,55,0.4);
+  color: rgba(212,175,55,0.7);
+  background: rgba(212,175,55,0.05);
+  cursor: pointer;
+  text-transform: uppercase;
+  transition: border-color 0.2s, color 0.2s;
+  -webkit-tap-highlight-color: transparent;
+}
+.hpill:hover, .hpill:active { border-color: var(--red2); color: var(--red2); }
+
+/* ── COMPTEUR ── */
+.compteur {
+  font-size: 11px;
+  letter-spacing: 2px;
+  color: rgba(212,175,55,0.3);
+  text-transform: uppercase;
+  text-align: center;
+}
+
+/* ── DÉCO LATÉRALE ── */
+.side-deco {
+  position: fixed;
+  top: 50%;
+  transform: translateY(-50%);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  align-items: center;
+  z-index: 3;
+  pointer-events: none;
+}
+.side-deco.left  { left: 12px; }
+.side-deco.right { right: 12px; }
+.side-item {
+  font-size: 22px;
+  animation: side-pulse 3s ease-in-out infinite alternate;
+  opacity: 0.5;
+  filter: drop-shadow(0 0 6px rgba(204,0,0,0.6));
+}
+.side-item:nth-child(2) { animation-delay: 0.7s; font-size: 18px; opacity: 0.35; }
+.side-item:nth-child(3) { animation-delay: 1.4s; font-size: 14px; opacity: 0.25; }
+@keyframes side-pulse {
+  from { transform: scale(1); }
+  to   { transform: scale(1.2); }
+}
+
+@media (max-width: 600px) {
+  .side-deco { display: none; }
+}
+</style>
+</head>
+<body>
+
+<!-- ÉTOILES -->
+<div class="cosmos" id="cosmos"></div>
+
+<!-- DÉCO LATÉRALE -->
+<div class="side-deco left">
+  <span class="side-item">❤️</span>
+  <span class="side-item">✦</span>
+  <span class="side-item">❤️</span>
+</div>
+<div class="side-deco right">
+  <span class="side-item">❤️</span>
+  <span class="side-item">✦</span>
+  <span class="side-item">❤️</span>
+</div>
+
+<div class="page">
+
+  <!-- CADRE BAROQUE -->
+  <div class="cadre-outer">
+    <span class="orn tl">❧</span>
+    <span class="orn tr">❧</span>
+    <span class="orn bl">❧</span>
+    <span class="orn br">❧</span>
+
+    <div class="cadre-inner">
+      <div class="cadre-content">
+
+        <!-- Coeurs en fond -->
+        <div class="hearts-bg" id="hearts-bg"></div>
+
+        <div class="oracle-eyebrow">— exposition —</div>
+        <div class="oracle-crown">👑</div>
+        <div class="oracle-title">Oracle<br>de l'Amour</div>
+        <div class="oracle-sub">✦ &nbsp; entre ton prénom &nbsp; ✦</div>
+
+        <div class="divider">✦</div>
+
+        <div class="input-label">Qui es-tu, ô visiteur·se ?</div>
+
+        <div class="prenom-wrap" style="width:100%;">
+          <input class="prenom-field" id="prenom" type="text"
+            placeholder="ton prénom…"
+            maxlength="28"
+            autocomplete="off"
+            autocorrect="off"
+            autocapitalize="words"
+            spellcheck="false" />
+        </div>
+
+        <button class="oracle-btn" id="btn" onclick="tirer()">
+          ❤ &nbsp; Consulter l'oracle &nbsp; ❤
+        </button>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- CARTE RÉSULTAT -->
+  <div class="result-zone">
+    <div class="result-badge">✦ ta déclaration ✦</div>
+    <div class="result-card" id="carte">
+      <span class="card-corner-orn tl">✦</span>
+      <span class="card-corner-orn tr">✦</span>
+      <span class="card-corner-orn bl">✦</span>
+      <span class="card-corner-orn br">✦</span>
+      <div class="result-placeholder">— en attente de consultation —</div>
+    </div>
+  </div>
+
+  <!-- HISTORIQUE -->
+  <div class="history-section">
+    <div class="history-pills" id="history"></div>
+    <div class="compteur" id="compteur"></div>
+  </div>
+
+</div>
+
+<script>
+/* ── ÉTOILES & ÉCLAIRS ── */
+(function() {
+  const cosmos = document.getElementById('cosmos');
+  for (let i = 0; i < 80; i++) {
+    const s = document.createElement('div');
+    s.className = 'star';
+    const sz = Math.random() * 2.5 + 0.5;
+    s.style.cssText = `width:${sz}px;height:${sz}px;top:${Math.random()*100}%;left:${Math.random()*100}%;--d:${(Math.random()*4+1).toFixed(1)}s;--o:${(Math.random()*0.7+0.2).toFixed(2)};animation-delay:${(Math.random()*5).toFixed(1)}s`;
+    cosmos.appendChild(s);
+  }
+  const lpos = [15, 30, 50, 68, 82];
+  lpos.forEach((lp, i) => {
+    const l = document.createElement('div');
+    l.className = 'lightning';
+    l.style.cssText = `left:${lp}%;height:${Math.random()*35+20}%;--fd:${(Math.random()*5+4).toFixed(1)}s;animation-delay:${(i*1.3).toFixed(1)}s;opacity:0;transform:rotate(${(Math.random()*6-3).toFixed(1)}deg)`;
+    cosmos.appendChild(l);
+  });
+})();
+
+/* ── COEURS FLOTTANTS ── */
+(function() {
+  const bg = document.getElementById('hearts-bg');
+  for (let i = 0; i < 12; i++) {
+    const h = document.createElement('div');
+    h.className = 'hrt';
+    const sz = Math.floor(Math.random()*20+12);
+    h.style.cssText = `font-size:${sz}px;left:${Math.random()*90}%;top:${Math.random()*90}%;--fd2:${(Math.random()*5+4).toFixed(1)}s;--r:${(Math.random()*30-15).toFixed(0)}deg;animation-delay:${(Math.random()*6).toFixed(1)}s`;
+    h.textContent = '❤';
+    bg.appendChild(h);
+  }
+})();
+
+/* ── DÉCLARATIONS ── */
+const DECLARATIONS = [
+  ["Si tu étais une couleur, tu serais toutes à la fois — et l'arc-en-ciel demanderait ta permission.", "🌈"],
+  ["Tu rayonnes tellement que les tournesols ont demandé ton numéro.", "🌻"],
+  ["Mon cœur bat en technicolor depuis que tu existes.", "💜"],
+  ["Tu es la crème dans mon café psychédélique du matin.", "☕"],
+  ["Quelque part dans l'univers, une étoile a choisi ton prénom comme nom de scène.", "⭐"],
+  ["Si l'amour était une chanson des années 70, tu en serais le refrain qui reste en tête trois semaines.", "🎵"],
+  ["Tu es mon cheval à bascule préféré dans ce manège qu'on appelle la vie.", "🎠"],
+  ["Les pieuvres t'envoient des câlins avec leurs huit bras parce qu'un seul ne suffit pas.", "🐙"],
+  ["Tu es la paillette dans la purée, la surprise dans le Kinder, le pompon sur le bonnet.", "✨"],
+  ["Mon âme ressemble à un disque vinyle rayé quand tu n'es pas là.", "💿"],
+  ["Si j'étais un nuage, je ferais exprès de passer au-dessus de ta tête pour te faire de l'ombre les jours chauds.", "☁️"],
+  ["Tu es la raison pour laquelle les flamants roses se tiennent sur une jambe — ils t'imitent en essayant d'être gracieux.", "🦩"],
+  ["Je t'aime comme un cactus aime la pluie : rarement, mais avec une intensité volcanique.", "🌵"],
+  ["Tu es plus pétillant·e qu'un soda à la framboise ouvert dans l'espace.", "🫧"],
+  ["Chaque fois que tu souris, quelque part un chat fait un câlin à un chien.", "🐱"],
+  ["Tu es la cerise sur le gâteau, la glace sur la cerise, et le gâteau aussi en fait.", "🍒"],
+  ["Mon cœur fait des saltos périlleux depuis qu'on se connaît. Il demande un sponsor.", "🤸"],
+  ["Si tu étais une plante, tu serais une orchidée qui pousse en plein milieu d'un supermarché — improbable et magnifique.", "🌺"],
+  ["Tu es la couleur qu'on n'a pas encore inventée mais qu'on voit quand on ferme les yeux très fort.", "🎨"],
+  ["Les dauphins te saluent de leurs nageoires même quand tu n'es pas à la mer.", "🐬"],
+  ["Ton existence est la preuve que l'univers a parfois de très bonnes idées.", "🌌"],
+  ["Tu es plus doux·ce qu'un nuage en coton sur une planète sans gravité.", "🪐"],
+  ["Je t'aime comme un panda aime le bambou : avec sérieux, et en mâchouillant lentement.", "🐼"],
+  ["Tu es l'anagramme parfait de merveilleux·se, même si les lettres ne correspondent pas.", "💌"],
+  ["Si l'amour avait une odeur, ce serait la brioche chaude le dimanche matin et un peu de toi.", "🥐"],
+  ["Tu fais battre mon cœur comme un tambourin dans une fanfare galactique.", "🥁"],
+  ["Tu es mon arc-en-ciel de poche, celui que je glisse dans la journée quand elle devient grise.", "🌈"],
+  ["Les papillons font des figures de freestyle dans mon ventre rien que d'y penser.", "🦋"],
+  ["Tu es la parenthèse de bonheur au milieu d'une phrase trop longue.", "😊"],
+  ["Mon amour pour toi est plus grand qu'un éléphant qui fait du hula-hoop.", "🐘"],
+  ["Tu es la mélodie qui reste, celle qu'on fredonne sous la douche sans savoir pourquoi.", "🎶"],
+  ["Si tu étais une planète, tous les astronautes demanderaient à y atterrir en premier.", "🚀"],
+  ["Tu es le genre de personne pour qui les licornes feraient des heures sup.", "🦄"],
+  ["Je t'aime plus que le nombre de grains de sable sur une plage imaginaire.", "🏖️"],
+  ["Tu es la surprise dans la boîte aux lettres — et c'est toujours une bonne nouvelle.", "💌"],
+  ["Ton sourire est classé monument historique dans mon cœur depuis la première fois.", "🏛️"],
+  ["Tu es l'endroit où j'aurais voulu atterrir si j'avais été un oiseau migrateur.", "🐦"],
+  ["Mon amour pour toi déborde comme un bain trop chaud — exactement comme on aime ça.", "🛁"],
+  ["Tu es la dernière fraise dans la boîte, la plus belle, celle qu'on garde pour la fin.", "🍓"],
+  ["Si l'univers avait un service client, je lui écrirais pour le remercier de t'avoir inventé·e.", "📬"],
+  ["Tu es la valse des confettis dans une tempête parfaite de joie.", "🎊"],
+  ["Mon cœur te reconnaît même dans le noir, même de loin, même en désordre.", "💛"],
+  ["Tu es le dimanche matin de toute la semaine.", "☀️"],
+  ["Tu brilles plus fort qu'un miroir de discothèque sous un soleil d'été.", "🪩"],
+  ["Je t'aime comme un chat aime une boîte en carton : sans raison claire et avec une conviction totale.", "📦"],
+  ["Si tu étais un parfum, tu serais celui qu'on cherche à retrouver toute la vie.", "🌸"],
+  ["Tu es le bruit des vagues dans un coquillage collé à l'oreille — réconfortant et un peu magique.", "🐚"],
+  ["Mon enthousiasme pour toi est proportionnel à la taille d'un éléphant rose.", "🌷"],
+  ["Tu es l'exclamation que personne n'attendait et dont tout le monde avait besoin.", "❕"],
+  ["Si l'amour était un sport olympique, tu serais la médaille, le podium et les hymnes.", "🥇"],
+  ["Tu es la chose la plus pop et la plus douce que l'univers ait fabriquée en secret.", "🍭"],
+  ["Mon cœur fait des figures de patinage artistique depuis que tu y habites.", "⛸️"],
+  ["Tu es la couleur préférée que je n'avais pas encore choisie.", "🎀"],
+  ["Si tu étais une météo, tu serais 22 degrés avec une brise légère et un arc-en-ciel en prime.", "🌤️"],
+  ["Je t'aime comme une fleur aime la pluie — en levant les bras et en faisant semblant que c'était prévu.", "💐"],
+  ["Tu es la case bonus sur le plateau de jeu de ma vie.", "🎲"],
+  ["Ton existence est la réponse à une question que je n'avais pas encore formulée.", "💭"],
+  ["Tu es l'endroit où les baleines vont chanter quand elles veulent être heureuses.", "🐋"],
+  ["Mon amour pour toi a la forme d'un gâteau à sept étages décoré par quelqu'un de très enthousiaste.", "🎂"],
+  ["Tu es la preuve que parfois la réalité est plus belle que l'imagination.", "🌟"],
+  ["Je t'aime comme les tournesols aiment s'étirer vers la lumière — obstinément et avec style.", "🌻"],
+  ["Tu es le solo de guitare inattendu au milieu d'une chanson douce.", "🎸"],
+  ["Si tu étais un animal, tu serais le genre de lapin qui organise des fêtes surprise.", "🐇"],
+  ["Mon cœur a rangé une photo de toi dans chaque tiroir de son appartement intérieur.", "🏠"],
+  ["Tu es la preuve vivante que la vie a parfois un sens de l'humour magnifique.", "🎭"],
+  ["Je t'aime autant qu'un enfant aime les bulles de savon — avec tout son corps.", "🫧"],
+  ["Tu es le trésor au bout de l'arc-en-ciel, et l'arc-en-ciel aussi.", "🌈"],
+  ["Si le bonheur avait une adresse, ce serait quelque part entre toi et maintenant.", "📮"],
+  ["Tu es la danse que j'invente quand personne ne regarde.", "💃"],
+  ["Mon amour pour toi est aussi indélogeable qu'une chanson kitsch en août.", "🎤"],
+  ["Tu es le dernier carré de chocolat qu'on garde pour soi — précieux et savouré lentement.", "🍫"],
+  ["Si j'étais une constellation, je dessinerais ton prénom dans le ciel chaque nuit.", "✨"],
+  ["Tu es la joie emballée dans du papier de soie, dans une boîte trop belle pour être ouverte.", "🎁"],
+  ["Mon cœur te fait une standing ovation depuis que tu existes.", "👏"],
+  ["Tu es l'espèce rare de miracle qu'on croise une fois et qu'on chérit toujours.", "🌺"],
+  ["Je t'aime comme la lune aime se lever tôt pour voir le soleil se coucher.", "🌙"],
+  ["Tu es la fanfare surprise dans le couloir de ma vie ordinaire.", "🎺"],
+  ["Si l'amour était un jardin, tu en serais la plante la plus étrange et la plus belle.", "🌿"],
+  ["Mon enthousiasme pour ton existence dépasse les capacités d'expression humaine — et pourtant j'essaie.", "💥"],
+  ["Tu es le genre de personne pour qui on inventerait volontiers une nouvelle couleur.", "🎨"],
+  ["Mon cœur a fait imprimer ton prénom sur sa tasse préférée.", "☕"]
+];
+
+const THEMES = ['cv-red','cv-green','cv-gold','cv-pink','cv-red','cv-gold'];
+const INSERTIONS = [
+  (t, n) => n + ", " + t.charAt(0).toLowerCase() + t.slice(1),
+  (t, n) => t.replace(/\.$/, ` — et ça, ${n}, c'est une certitude absolue.`),
+  (t, n) => `Pour toi, ${n} : ` + t.charAt(0).toLowerCase() + t.slice(1),
+  (t, n) => t + ` Signé : l'oracle, pour ${n}.`,
+  (t, n) => `${n}, ` + t.charAt(0).toLowerCase() + t.slice(1),
+  (t, n) => t.replace(/[.!]$/, '') + `. C'est dit, ${n}.`,
+];
+
+let idx = Math.floor(Math.random() * DECLARATIONS.length);
+let themeIdx = 0;
+let tirages = 0;
+let historyNoms = [];
+
+function tirer() {
+  const prenom = document.getElementById('prenom').value.trim();
+  const [texteBase, emoji] = DECLARATIONS[idx % DECLARATIONS.length];
+  idx = (idx + Math.floor(Math.random() * 9) + 1) % DECLARATIONS.length;
+
+  let texte = texteBase;
+  if (prenom) {
+    const fn = INSERTIONS[Math.floor(Math.random() * INSERTIONS.length)];
+    texte = fn(texteBase, prenom);
+  }
+
+  const theme = THEMES[themeIdx % THEMES.length];
+  themeIdx++;
+  tirages++;
+
+  const carte = document.getElementById('carte');
+  carte.className = 'result-card ' + theme;
+  carte.innerHTML = `
+    <span class="card-corner-orn tl">✦</span>
+    <span class="card-corner-orn tr">✦</span>
+    <span class="card-corner-orn bl">✦</span>
+    <span class="card-corner-orn br">✦</span>
+    <div class="result-emoji">${emoji}</div>
+    <div class="result-text">${texte}</div>
+  `;
+
+  document.getElementById('compteur').textContent =
+    '✦ ' + tirages + ' déclaration' + (tirages > 1 ? 's' : '') +
+    ' distribuée' + (tirages > 1 ? 's' : '') + ' ce soir ✦';
+
+  if (prenom && !historyNoms.includes(prenom)) {
+    historyNoms.unshift(prenom);
+    if (historyNoms.length > 6) historyNoms.pop();
+    renderHistory();
+  }
+}
+
+function renderHistory() {
+  document.getElementById('history').innerHTML = historyNoms.map(n =>
+    `<span class="hpill" onclick="document.getElementById('prenom').value='${n}';tirer()">${n}</span>`
+  ).join('');
+}
+
+document.getElementById('prenom').addEventListener('keydown', e => {
+  if (e.key === 'Enter') tirer();
+});
+</script>
+</body>
+</html>
